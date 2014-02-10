@@ -1,6 +1,6 @@
 <?php
 /**
- * Marvel API Series API Wrapper.
+ * Marvel API - Series API Wrapper.
  * 
  * @see http://developer.marvel.com/docs
  */
@@ -19,7 +19,9 @@ class MarvelAPI_Series extends MarvelAPI {
 	
 	
 	/**
-	 * Search for the series.
+	 * Search for a series.
+	 * 
+	 * @see http://developer.marvel.com/docs#!/public/getSeriesCollection_get_25
 	 * 
 	 * @param unknown $title
 	 * @param string $modifiedSince
@@ -36,7 +38,7 @@ class MarvelAPI_Series extends MarvelAPI {
 	 * @return unknown
 	 */
 	public function search($title, $modifiedSince=NULL, $comics=NULL, $stories=NULL, $events=NULL, 
-			$creators=NULL, $characters=NULL, $seriesType=NULL, $contain=NULL, $orderBy=NULL, 
+			$creators=NULL, $characters=NULL, $seriesType=NULL, $contains=NULL, $orderBy=NULL, 
 			$limit=NULL, $offset=NULL){
 		
 		//Create the call. Parameters Keys from the API Specs.
@@ -66,15 +68,17 @@ class MarvelAPI_Series extends MarvelAPI {
 	/**
 	 * Fetch a specific series by Id.
 	 * 
-	 * @param int $seriedId
+	 * @see http://developer.marvel.com/docs#!/public/getSeriesIndividual_get_26
+	 * 
+	 * @param int $id
 	 */
-	public function fetchById($seriesId){
+	public function fetchById($id){
 		
-		if(!ctype_digit($seriesId)){
-			throw new Exception("Supplied series in not valid.");
+		if(!ctype_digit($id)){
+			throw new Exception("Supplied series id is not valid.");
 		}
 
-		$url = parent::initCall($this->seriesEndPoint."/$seriesId", $params);
+		$url = parent::initCall($this->seriesEndPoint."/$id", $params);
 		
 		//Send the call.
 		$response = MarvelAPI_Curl::doCall($url);
@@ -86,7 +90,9 @@ class MarvelAPI_Series extends MarvelAPI {
 	/**
 	 * Fetch the characters for a specific series.
 	 * 
-	 * @param unknown $seriesId
+	 * @see http://developer.marvel.com/docs#!/public/getSeriesCharacterWrapper_get_27
+	 * 
+	 * @param int $id
 	 * @param string $name
 	 * @param string $modifiedSince
 	 * @param string $comics
@@ -98,11 +104,11 @@ class MarvelAPI_Series extends MarvelAPI {
 	 * @throws Exception
 	 * @return unknown
 	 */
-	public function fetchCharacters($seriesId, $name=NULL, $modifiedSince=NULL, $comics=NULL, $events=NULL, 
+	public function fetchCharacters($id, $name=NULL, $modifiedSince=NULL, $comics=NULL, $events=NULL, 
 			$stories=NULL, $orderBy=NULL, $limit=NULL, $offset=NULL){
 		
-		if(!ctype_digit($seriesId)){
-			throw new Exception("Supplied series in not valid.");
+		if(!ctype_digit($id)){
+			throw new Exception("Supplied series id not valid.");
 		}
 		
 		//Create the call. Parameters Keys from the API Specs.
@@ -115,7 +121,7 @@ class MarvelAPI_Series extends MarvelAPI {
 		$params['limit']		 	 = $limit;
 		$params['offset']		 	 = $offset;
 		
-		$url = parent::initCall($this->seriesEndPoint."/$seriesId/characters", $params);
+		$url = parent::initCall($this->seriesEndPoint."/$id/characters", $params);
 		
 		//Send the call.
 		$response = MarvelAPI_Curl::doCall($url);
@@ -128,7 +134,9 @@ class MarvelAPI_Series extends MarvelAPI {
 	/**
 	 * Fetch the comics for a specific series.
 	 * 
-	 * @param unknown $seriesId
+	 * @see http://developer.marvel.com/docs#!/public/getComicsCollection_get_28
+	 * 
+	 * @param unknown $id
 	 * @param string $format
 	 * @param string $formatType
 	 * @param string $noVariants
@@ -148,13 +156,13 @@ class MarvelAPI_Series extends MarvelAPI {
 	 * @throws Exception
 	 * @return unknown
 	 */
-	public function fetchComics($seriesId, $format=NULL, $formatType=NULL, 
+	public function fetchComics($id, $format=NULL, $formatType=NULL, 
 			$noVariants=NULL, $dateDescriptor=NULL, $dateRange=NULL, $hasDigitalIssue=NULL, 
 			$modifiedSince=NULL, $creators=NULL, $characters=NULL, $events=NULL, 
 			$stories=NULL, $sharedAppearances=NULL, $collaborators=NULL, $orderBy=NULL, $limit=NULL, $offset=NULL){
 		
-		if(!ctype_digit($seriesId)){
-			throw new Exception("Supplied series in not valid.");
+		if(!ctype_digit($id)){
+			throw new Exception("Supplied series id not valid.");
 		}
 		
 		//Create the call. Parameters Keys from the API Specs.
@@ -175,7 +183,7 @@ class MarvelAPI_Series extends MarvelAPI {
 		$params['limit']		 	 = $limit;
 		$params['offset']		 	 = $offset;
 		
-		$url = parent::initCall($this->seriesEndPoint."/$seriesId/comics", $params);
+		$url = parent::initCall($this->seriesEndPoint."/$id/comics", $params);
 		
 		//Send the call.
 		$response = MarvelAPI_Curl::doCall($url);
@@ -187,7 +195,9 @@ class MarvelAPI_Series extends MarvelAPI {
 	/**
 	 * Fetch the creators for the specific series.
 	 * 
-	 * @param unknown $seriesId
+	 * @see http://developer.marvel.com/docs#!/public/getCreatorCollection_get_29
+	 * 
+	 * @param unknown $id
 	 * @param string $firstName
 	 * @param string $lastName
 	 * @param string $middleName
@@ -202,11 +212,11 @@ class MarvelAPI_Series extends MarvelAPI {
 	 * @throws Exception
 	 * @return unknown
 	 */
-	public function fetchCreators($seriesId, $firstName=NULL, $lastName=NULL, $middleName=NULL,
+	public function fetchCreators($id, $firstName=NULL, $lastName=NULL, $middleName=NULL,
 		$suffix=NULL, $modifiedSince=NULL, $comics=NULL, $events=NULL, $stories=NULL, $orderBy=NULL, $limit=NULL, $offset=NULL){
 		
-		if(!ctype_digit($seriesId)){
-			throw new Exception("Supplied series in not valid.");
+		if(!ctype_digit($id)){
+			throw new Exception("Supplied series id not valid.");
 		}
 		
 		//Create the call. Parameters Keys from the API Specs.
@@ -223,7 +233,7 @@ class MarvelAPI_Series extends MarvelAPI {
 		$params['offset']		 = $offset;
 		  
 		
-		$url = parent::initCall($this->seriesEndPoint."/$seriesId/creators", $params);
+		$url = parent::initCall($this->seriesEndPoint."/$id/creators", $params);
 		
 		//Send the call.
 		$response = MarvelAPI_Curl::doCall($url);
@@ -236,7 +246,9 @@ class MarvelAPI_Series extends MarvelAPI {
 	/**
 	 * Fetch events for a specific series.
 	 * 
-	 * @param unknown $seriesId
+	 * @see http://developer.marvel.com/docs#!/public/getEventsCollection_get_30
+	 * 
+	 * @param int $id
 	 * @param string $name
 	 * @param string $modifiedSince
 	 * @param string $creators
@@ -249,11 +261,11 @@ class MarvelAPI_Series extends MarvelAPI {
 	 * @throws Exception
 	 * @return unknown
 	 */
-	public function fetchEvents($seriesId, $name=NULL, $modifiedSince=NULL, $creators=NULL, $characters=NULL, $comics=NULL,  
+	public function fetchEvents($id, $name=NULL, $modifiedSince=NULL, $creators=NULL, $characters=NULL, $comics=NULL,  
 			$stories=NULL, $orderBy=NULL, $limit=NULL, $offset=NULL){
 		
-		if(!ctype_digit($seriesId)){
-			throw new Exception("Supplied series in not valid.");
+		if(!ctype_digit($id)){
+			throw new Exception("Supplied series id not valid.");
 		}
 		
 		//Create the call. Parameters Keys from the API Specs.
@@ -268,7 +280,7 @@ class MarvelAPI_Series extends MarvelAPI {
 		$params['characters']    = $characters;
 		
 		
-		$url = parent::initCall($this->seriesEndPoint."/$seriesId/events", $params);
+		$url = parent::initCall($this->seriesEndPoint."/$id/events", $params);
 		
 		//Send the call.
 		$response = MarvelAPI_Curl::doCall($url);
@@ -280,7 +292,9 @@ class MarvelAPI_Series extends MarvelAPI {
 	/**
 	 * Fetch the stories for a specific series.
 	 * 
-	 * @param int $seriesId
+	 * @see http://developer.marvel.com/docs#!/public/getSeriesStoryCollection_get_31
+	 * 
+	 * @param int $id
 	 * @param string $modifiedSince
 	 * @param string $comics
 	 * @param string $events
@@ -292,11 +306,11 @@ class MarvelAPI_Series extends MarvelAPI {
 	 * @throws Exception
 	 * @return unknown
 	 */
-	public function fetchStories($seriesId, $modifiedSince=NULL, $comics=NULL, $events=NULL, $creators=NULL, $characters=NULL, 
+	public function fetchStories($id, $modifiedSince=NULL, $comics=NULL, $events=NULL, $creators=NULL, $characters=NULL, 
 			$orderBy=NULL, $limit=NULL, $offset=NULL){
 		
-		if(!ctype_digit($seriesId)){
-			throw new Exception("Supplied series in not valid.");
+		if(!ctype_digit($id)){
+			throw new Exception("Supplied series id not valid.");
 		}
 		
 		//Create the call. Parameters Keys from the API Specs.
@@ -308,7 +322,7 @@ class MarvelAPI_Series extends MarvelAPI {
 		$params['limit']		 = $limit;
 		$params['offset']		 = $offset;
 		
-		$url = parent::initCall($this->seriesEndPoint."/$seriesId/stories", $params);
+		$url = parent::initCall($this->seriesEndPoint."/$id/stories", $params);
 		
 		//Send the call.
 		$response = MarvelAPI_Curl::doCall($url);

@@ -12,13 +12,16 @@ class MarvelAPI_Events extends MarvelAPI {
 	
 	/**
 	 * End Point for Series.
-	 * @var unknown
+	 * 
+	 * @var String
 	 */
 	private $eventsEndPoint = '/v1/public/events';
 	
 	
 	/**
 	 * Search for a specific event.
+	 * 
+	 * @see http://developer.marvel.com/docs#!/public/getEventsCollection_get_18
 	 * 
 	 * @param unknown $name
 	 * @param string $modifiedSince
@@ -60,15 +63,17 @@ class MarvelAPI_Events extends MarvelAPI {
 	/**
 	 * Fetch a specific event by id.
 	 * 
-	 * @param int $eventId
+	 * @see http://developer.marvel.com/docs#!/public/getEventIndividual_get_19
+	 * 
+	 * @param int $id
 	 */
-	public function fetchById($eventId){
+	public function fetchById($id){
 		
-		if(!ctype_digit($eventId)){
+		if(!ctype_digit($id)){
 			throw new Exception("Supplied event id is not valid.");
 		}
 
-		$url = parent::initCall($this->eventsEndPoint."/$eventId");
+		$url = parent::initCall($this->eventsEndPoint."/$id");
 		
 		//Send the call.
 		$response = MarvelAPI_Curl::doCall($url);
@@ -80,7 +85,9 @@ class MarvelAPI_Events extends MarvelAPI {
 	/**
 	 * Fetch the characters for a specific event.
 	 * 
-	 * @param unknown $eventId
+	 * @see http://developer.marvel.com/docs#!/public/getEventCharacterCollection_get_20
+	 * 
+	 * @param unknown $id
 	 * @param string $name
 	 * @param string $modifiedSince
 	 * @param string $series
@@ -94,10 +101,27 @@ class MarvelAPI_Events extends MarvelAPI {
 	public function fetchCharacters($id, $name=NULL, $modifiedSince=NULL, $comics=NULL, $series=NULL,
 			$orderBy=NULL, $limit=NULL, $offset=NULL){
 		
-		$url = $this->eventsEndPoint."/$id/characters";
 		
-		return parent::fetchCharacters($url, $id, $name, $modifiedSince, $comics, $series, $orderBy, $limit, $offset);
-
+		if(!ctype_digit($id)){
+			throw new Exception("Supplied event id not valid.");
+		}
+		
+		//Create the call. Parameters Keys from the API Specs.
+		$params['name']				 = $name;
+		$params['modifiedSince'] 	 = $modifiedSince;
+		$params['comics']			 = $comics;
+		$params['series']       	 = $series;
+		$params['orderBy']		 	 = $orderBy;
+		$params['limit']		 	 = $limit;
+		$params['offset']		 	 = $offset;
+		$params['stories']			 = $stories;
+		
+		$url = parent::initCall($this->eventsEndPoint."/$id/characters", $params);
+		
+		//Send the call.
+		$response = MarvelAPI_Curl::doCall($url);
+		
+		return $response;
 	}
 	
 	
@@ -105,7 +129,9 @@ class MarvelAPI_Events extends MarvelAPI {
 	/**
 	 * Fetch the comics for a specific event.
 	 * 
-	 * @param unknown $seriesId
+	 * @see http://developer.marvel.com/docs#!/public/getComicsCollection_get_21
+	 * 
+	 * @param unknown $id
 	 * @param string $format
 	 * @param string $formatType
 	 * @param string $noVariants
@@ -131,18 +157,42 @@ class MarvelAPI_Events extends MarvelAPI {
 			$sharedAppearances=NULL, $collaborators=NULL, $orderBy=NULL, $limit=NULL, $offset=NULL){
 		
 		
-		$url = $this->storiesEndPoint."/$id/comics";
+		if(!ctype_digit($id)){
+			throw new Exception("Supplied event id not valid.");
+		}
 		
-		return parent::fetchComics($url, $id, $format, $formatType, 
-			$noVariants, $dateDescripto, $dateRange, $hasDigitalIssue, 
-			$modifiedSince, $creators, $characters, $series, $events, $stories,
-			$sharedAppearances, $collaborators, $orderBy, $limit, $offset);
+		//Create the call. Parameters Keys from the API Specs.
+		$params['format']		 	 = $format;
+		$params['formatType']    	 = $formatType;
+		$params['noVariants']	 	 = $noVariants;
+		$params['dateDescriptors']	 = $dateDescriptor;
+		$params['dateRange']		 = $dateRange;
+		$params['hasDigitalIssue']   = $hasDigitalIssue;
+		$params['modifiedSince'] 	 = $modifiedSince;
+		$params['creators']			 = $creators;
+		$params['characters']		 = $characters;
+		$params['events']		 	 = $events;
+		$params['series']       	 = $series;
+		$params['sharedAppearances'] = $sharedAppearances;
+		$params['collaborators']	 = $collaborators;
+		$params['orderBy']		 	 = $orderBy;
+		$params['limit']		 	 = $limit;
+		$params['offset']		 	 = $offset;
+		
+		$url = parent::initCall($this->storiesEndPoint."/$id/comics", $params);
+		
+		//Send the call.
+		$response = MarvelAPI_Curl::doCall($url);
+		
+		return $response;
 
 	}
 	
 	
 	/**
 	 * Fetch the creators for the specific events.
+	 * 
+	 * @see http://developer.marvel.com/docs#!/public/getCreatorCollection_get_22
 	 * 
 	 * @param unknown $seriesId
 	 * @param string $firstName
@@ -162,10 +212,28 @@ class MarvelAPI_Events extends MarvelAPI {
 	public function fetchCreators($id, $firstName=NULL, $lastName=NULL, $middleName=NULL,
 		$suffix=NULL, $modifiedSince=NULL, $comics=NULL, $series=NULL, $stories=NULL, $orderBy=NULL, $limit=NULL, $offset=NULL){
 		
-		$url = $this->eventsEndPoint."/$id/creators";
 		
-		$response = parent::fetchCreators($url, $id, $firstName=NULL, $lastName=NULL, $middleName=NULL,
-			$suffix=NULL, $modifiedSince=NULL, $comics=NULL, $series=NULL, $stories=NULL, $orderBy=NULL, $limit=NULL, $offset=NULL);
+		if(!ctype_digit($id)){
+			throw new Exception("Supplied event id not valid.");
+		}
+		
+		//Create the call. Parameters Keys from the API Specs.
+		$params['firstName']     = $firstName;
+		$params['middleName']    = $middleName;
+		$params['lastName']	     = $lastName;
+		$params['suffix']		 = $suffix;
+		$params['modifiedSince'] = $modifiedSince;
+		$params['comics']		 = $comics;
+		$params['series']        = $series;
+		$params['orderBy']		 = $orderBy;
+		$params['limit']		 = $limit;
+		$params['offset']		 = $offset;
+		$params['stories']		 = $stories;
+		
+		$url = parent::initCall($this->eventsEndPoint."/$id/creators", $params);
+		
+		//Send the call.
+		$response = MarvelAPI_Curl::doCall($url);
 		
 		return $response;
 		
@@ -175,7 +243,9 @@ class MarvelAPI_Events extends MarvelAPI {
 	/**
 	 * Fetch events for a specific story.
 	 * 
-	 * @param unknown $storyId
+	 * @see http://developer.marvel.com/docs#!/public/getCreatorSeriesCollection_get_23
+	 * 
+	 * @param unknown $id
 	 * @param string $name
 	 * @param string $modifiedSince
 	 * @param string $creators
@@ -221,7 +291,9 @@ class MarvelAPI_Events extends MarvelAPI {
 	/**
 	 * Fetch the stories for a specific series.
 	 *
-	 * @param int $seriesId
+	 * @see http://developer.marvel.com/docs#!/public/getEventStoryCollection_get_24
+	 * 
+	 * @param int id
 	 * @param string $modifiedSince
 	 * @param string $comics
 	 * @param string $events
@@ -236,8 +308,8 @@ class MarvelAPI_Events extends MarvelAPI {
 	public function fetchStories($id, $modifiedSince=NULL, $comics=NULL, $series=NULL, $creators=NULL, $characters=NULL,
 			$orderBy=NULL, $limit=NULL, $offset=NULL){
 	
-		if(!ctype_digit($seriesId)){
-			throw new Exception("Supplied id not valid.");
+		if(!ctype_digit($id)){
+			throw new Exception("Supplied event id not valid.");
 		}
 	
 		//Create the call. Parameters Keys from the API Specs.
